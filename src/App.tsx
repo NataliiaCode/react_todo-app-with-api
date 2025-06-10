@@ -1,5 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
+// eslint-disable-next-line no-console
+
 import React, { useCallback, useEffect, useState } from 'react';
 import { UserWarning } from './UserWarning';
 
@@ -163,6 +165,14 @@ export const App: React.FC = () => {
   const handleClearCompleted = async () => {
     const completedTodos = todos.filter(todo => todo.completed);
 
+    setTodos(prevTodos =>
+      prevTodos.map(todo =>
+        completedTodos.some(t => t.id === todo.id)
+          ? { ...todo, isLoading: true }
+          : todo,
+      ),
+    );
+
     await Promise.allSettled(
       completedTodos.map(async todo => {
         try {
@@ -172,6 +182,14 @@ export const App: React.FC = () => {
           showErrorContainer(Constants.DELETE_TODO_ERROR);
         }
       }),
+    );
+
+    setTodos(prevTodos =>
+      prevTodos.map(todo =>
+        completedTodos.some(t => t.id === todo.id)
+          ? { ...todo, isLoading: false }
+          : todo,
+      ),
     );
 
     setTimeout(() => {

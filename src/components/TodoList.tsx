@@ -48,7 +48,8 @@ export const TodoList: React.FC<TodoListProps> = ({
         <TodoItem
           key={todo.id}
           todo={todo}
-          isLoading={deletingTodoId === todo.id}
+          // isLoading={deletingTodoId === todo.id}
+          isLoading={deletingTodoId === todo.id || Boolean(todo.isLoading)}
           isTodoEditing={isTodoEditing}
           selectedPostId={selectedPostId}
           setIsTodoEditing={setIsTodoEditing}
