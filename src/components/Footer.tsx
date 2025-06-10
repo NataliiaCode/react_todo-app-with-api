@@ -1,5 +1,6 @@
 import React from 'react';
 import { FilterType } from '../enums/enums';
+import classNames from 'classnames';
 
 interface FooterProps {
   incompleteCount: number;
@@ -24,32 +25,19 @@ export const Footer: React.FC<FooterProps> = ({
 
       {/* Active link should have the 'selected' class */}
       <nav className="filter" data-cy="Filter">
-        <a
-          href="#/"
-          className={`filter__link ${filter === 'all' ? 'selected' : ''}`}
-          data-cy="FilterLinkAll"
-          onClick={() => onFilterChange('all')}
-        >
-          All
-        </a>
-
-        <a
-          href="#/active"
-          className={`filter__link ${filter === 'active' ? 'selected' : ''}`}
-          data-cy="FilterLinkActive"
-          onClick={() => onFilterChange('active')}
-        >
-          Active
-        </a>
-
-        <a
-          href="#/completed"
-          className={`filter__link ${filter === 'completed' ? 'selected' : ''}`}
-          data-cy="FilterLinkCompleted"
-          onClick={() => onFilterChange('completed')}
-        >
-          Completed
-        </a>
+        {Object.values(FilterType).map((filterOption: FilterType) => (
+          <a
+            key={filterOption}
+            href={`#/${filterOption}`}
+            className={classNames('filter__link', {
+              selected: filter === filterOption,
+            })}
+            data-cy={`FilterLink${filterOption.charAt(0).toUpperCase() + filterOption.slice(1)}`}
+            onClick={() => onFilterChange(filterOption)}
+          >
+            {filterOption.charAt(0).toUpperCase() + filterOption.slice(1)}
+          </a>
+        ))}
       </nav>
 
       {/* this button should be disabled if there are no completed todos */}

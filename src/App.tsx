@@ -19,12 +19,11 @@ import * as Constants from './hooks/constants';
 import { TodoList } from './components/TodoList';
 
 export const App: React.FC = () => {
-  //#region State
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const [filter, setFilter] = useState<FilterType>('all');
+  const [filter, setFilter] = useState<FilterType>(FilterType.All);
 
   const [deletingTodoId, setDeletingTodoId] = useState<number | null>(null);
 
@@ -63,15 +62,9 @@ export const App: React.FC = () => {
     loadTodos();
   }, []);
 
-  //#region filter
-
   const incompleteCount = todos.filter(todo => !todo.completed).length;
 
   const todosCompleted = todos.some(todo => todo.completed);
-
-  //#endregion
-
-  // Use the custom hook
   const {
     newTodoTitle,
     isAddingTodo,

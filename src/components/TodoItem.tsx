@@ -4,6 +4,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import classNames from 'classnames';
 import { Todo } from '../types/Todo';
+import {
+  handleTodoBlur,
+  handleTodoDoubleClick,
+  handleTodoKeyDown,
+  handleTodoKeyUp,
+} from '../utils/helpers';
 // import { UPDATE_TODO_ERROR } from '../hooks/constants';
 
 interface TodoItemProps {
@@ -97,13 +103,6 @@ export const TodoItem: React.FC<TodoItemProps> = ({
     }
   };
 
-  const handleKeyUp = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      setEditedTitle(todo.title);
-      setIsTodoEditing(false);
-    }
-  };
-
   return (
     <div
       data-cy="Todo"
@@ -133,21 +132,22 @@ export const TodoItem: React.FC<TodoItemProps> = ({
             placeholder="Empty todo will be deleted"
             value={editedTitle}
             onChange={e => setEditedTitle(e.target.value)}
-            onBlur={() => {
-              if (!isSubmitting && editedTitle.trim() !== todo.title.trim()) {
-                handleTitleSubmit();
-              } else {
-                setIsTodoEditing(false);
-              }
-            }}
-            onKeyUp={handleKeyUp}
+            onBlur={() =>
+              handleTodoBlur(
+                isSubmitting,
+                editedTitle,
+                todo.title,
+                handleTitleSubmit,
+                setIsTodoEditing,
+              )
+            }
+            onKeyUp={e =>
+              handleTodoKeyUp(e, setEditedTitle, todo.title, setIsTodoEditing)
+            }
             disabled={loading}
-            onKeyDown={e => {
-              if (e.key === 'Enter' && !isSubmitting) {
-                e.preventDefault();
-                handleTitleSubmit();
-              }
-            }}
+            onKeyDown={e =>
+              handleTodoKeyDown(e, isSubmitting, handleTitleSubmit)
+            }
           />
         </form>
       ) : (
@@ -155,10 +155,13 @@ export const TodoItem: React.FC<TodoItemProps> = ({
           <span
             data-cy="TodoTitle"
             className="todo__title"
-            onDoubleClick={() => {
-              setIsTodoEditing(true);
-              setSelectedPostId(todo.id);
-            }}
+            onDoubleClick={() =>
+              handleTodoDoubleClick(
+                setIsTodoEditing,
+                setSelectedPostId,
+                todo.id,
+              )
+            }
           >
             {todo.title}
           </span>

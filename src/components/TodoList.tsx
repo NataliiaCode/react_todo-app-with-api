@@ -2,10 +2,11 @@ import React, { useMemo } from 'react';
 import { Todo } from '../types/Todo';
 import { TodoItem } from './TodoItem';
 import { filterTodos } from '../utils/helpers';
+import { FilterType } from '../enums/enums';
 
 interface TodoListProps {
   todos: Todo[];
-  filter: string;
+  filter: FilterType;
   tempTodo: Todo | null;
 
   handleDeleteTodo: (id: number) => Promise<void>;
@@ -48,7 +49,6 @@ export const TodoList: React.FC<TodoListProps> = ({
         <TodoItem
           key={todo.id}
           todo={todo}
-          // isLoading={deletingTodoId === todo.id}
           isLoading={deletingTodoId === todo.id || Boolean(todo.isLoading)}
           isTodoEditing={isTodoEditing}
           selectedPostId={selectedPostId}
